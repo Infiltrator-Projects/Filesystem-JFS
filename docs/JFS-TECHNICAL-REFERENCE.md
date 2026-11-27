@@ -56,7 +56,7 @@ The independent provider uses Common V2: https://github.com/Infiltrator-Projects
 
 ## References and independent verification
 
-Pinned layout sources: https://github.com/torvalds/linux/tree/v6.12/fs/jfs (jfs_superblock.h, jfs_filsys.h, jfs_types.h, jfs_dinode.h, jfs_imap.h, jfs_xtree.h, jfs_dtree.h, jfs_dmap.h, jfs_logmgr.h). User-space tools: https://jfs.sourceforge.net/ . Test independently created Linux JFS and relevant OS/2 images, 40-bit address decoding, IAG boundaries, missing backing extents, unrecorded ranges, extent-tree splits, long-name slot chains, indexed versus legacy directories, map disagreement, external-log identity and interrupted metadata transactions. Exact buddy-tree layout, platform collation and journal redo encoding need further field-level source and fixture validation. The historical provider documents are preserved below; no runtime qualification is inferred.
+Pinned layout sources: https://github.com/torvalds/linux/tree/v6.12/fs/jfs (jfs_superblock.h, jfs_filsys.h, jfs_types.h, jfs_dinode.h, jfs_imap.h, jfs_xtree.h, jfs_dtree.h, jfs_dmap.h, jfs_logmgr.h). User-space tools: https://jfs.sourceforge.net/ . Test independently created Linux JFS and relevant OS/2 images, 40-bit address decoding, IAG boundaries, missing backing extents, unrecorded ranges, extent-tree splits, long-name slot chains, indexed versus legacy directories, map disagreement, external-log identity and interrupted metadata transactions. Exact buddy-tree layout, platform collation and journal redo encoding need further field-level source and fixture validation. Historical provider evidence is identified in Implementation and qualification boundary.
 
 Use jfs_dinode.h for packed inode layout; Linux in-memory objects are not persisted structures.
 
