@@ -12,6 +12,8 @@ The reference format stores little-endian fields and uses 512-byte inodes, 4096-
 
 Relative to the superblock: ASCII JFS1 at 0, version at 4, 64-bit aggregate size in physical/LVM blocks at 8; filesystem block bytes 16, log2 block size 20 (16-bit), log2 ratio to physical blocks 22, physical block size 24 and its exponent 28. Allocation-group size 32, flags 36, state 40, compression field 44, secondary aggregate inode table extent at 48 and map extent at 56. Log device and serial at 64/68, inline log extent 72, checker workspace extent 80, update time 88, fsck log length 96, active log selector 100 and legacy 11-byte name 101. Version-two fields: extend size 112, extend fsck/log extents 120/128, UUID 136, label 152 and log UUID 168. Validate size conversion, log identity and state; never assume a dirty volume is safe to mutate.
 
+The JFS1 signature is a Linux/OS2 lineage marker, not proof of every historical AIX variant. Check block-size/log2 relationships, aggregate and fileset boundaries and allocation/inode-map consistency before interpreting trees.
+
 ## Packed extent descriptors
 
 A physical extent descriptor (PXD) is eight bytes: little-endian word at 0 contains length in low 24 bits and the high eight bits of a 40-bit block address in its high byte; low address word at 4. Extent length and address use filesystem blocks. An XAD is sixteen bytes: flags at 0, reserved 1..2, high eight logical offset bits at 3, low logical offset word at 4 and PXD at 8. A data descriptor (DXD) has flag 0, three reserved bytes, byte length at 4 and PXD at 8. Decode the masks explicitly. XAD flag 0x08 marks allocated but unrecorded data; never expose stale payload from such an extent. Compression and other historical flags require separate support.
@@ -48,8 +50,14 @@ The aggregate block map uses dmap bitmaps and hierarchical summary trees to find
 
 JFS records metadata transactions in a log that can be inline or on an external logical volume. Distinguish aggregate mount serial and log UUID, transaction commit records, redo records and no-redo/free-space semantics. Modified pages and persistent maps are published under transaction management; working allocation may differ until commit. Recovery scans the validated log and applies only committed changes using the native redo ordering and page-range semantics. Unlink, truncate and rename must preserve link counts and prevent premature reuse. Defrag must copy and verify a physical extent, update its XAD transactionally and free the old run only after safe publication. Exact log record layouts and replay coverage must be established before independent writes.
 
+## Implementation and qualification boundary
+
+The independent provider uses Common V2: https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/FILESYSTEM_COMMON_ABI_V2.md . Negotiate actual operation masks and media profiles. Distinguish unsupported, corrupt, I/O and stale-handle results. Require bounded host I/O, exclusive unmounted ownership and durable flush before mutation. Test Media and Defragmenter consume the same engine, not separate format parsers. Hosted and freestanding binaries, relocation, recovery, BOOT, kernel integration and packages require separate exact-source evidence. Current support belongs to the repository README and qualification records. The intended package paths are /System/Filesystems/ and /System/Resources/Documentation/; the reference is not an installation or release-status claim.
+
 ## References and independent verification
 
 Pinned layout sources: https://github.com/torvalds/linux/tree/v6.12/fs/jfs (jfs_superblock.h, jfs_filsys.h, jfs_types.h, jfs_dinode.h, jfs_imap.h, jfs_xtree.h, jfs_dtree.h, jfs_dmap.h, jfs_logmgr.h). User-space tools: https://jfs.sourceforge.net/ . Test independently created Linux JFS and relevant OS/2 images, 40-bit address decoding, IAG boundaries, missing backing extents, unrecorded ranges, extent-tree splits, long-name slot chains, indexed versus legacy directories, map disagreement, external-log identity and interrupted metadata transactions. Exact buddy-tree layout, platform collation and journal redo encoding need further field-level source and fixture validation. The historical provider documents are preserved below; no runtime qualification is inferred.
 
-The PDF preserves both earlier documents as historical appendices.
+Use jfs_dinode.h for packed inode layout; Linux in-memory objects are not persisted structures.
+
+Retained source: https://github.com/Infiltrator-Projects/Filesystems/blob/101026021d9088d80b7f0f472d9061f0e2c688a3/native/filesystems/jfs/linux/jfs_superblock.h (blob 93402c4207).
