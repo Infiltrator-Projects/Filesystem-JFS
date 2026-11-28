@@ -8,4 +8,6 @@ The [original pinned source](https://github.com/Infiltrator-Projects/Filesystems
 
 ## Offline namespace development
 
-CORE mount/stat/list/read and VOLUME query are implemented for the bounded clean Linux v2 profile. The native block map, inode map and extent tree are used directly. Exact-revision CI must establish independent mount and payload correctness. External directory pages, full Unicode, journal replay and writes remain unqualified. Documentation-only publication remains unchanged.
+CORE mount/stat/list/read and VOLUME query are implemented for the bounded clean Linux revision 1/2 profile. The native block map, inode map and extent tree are used directly. Exact-revision CI must establish independent mount and payload correctness. External directory pages, full Unicode, journal replay and writes remain unqualified. Documentation-only publication remains unchanged.
+
+The [revision-one independent formatter test](https://github.com/Infiltrator-Projects/Filesystem-JFS/actions/runs/46131371330) passed native offline mount and empty root enumeration. The next regression exercises populated native metadata, nested names, sparse and unrecorded data and corrupt allocation refusal. It is not yet evidence of independently populated payloads.
