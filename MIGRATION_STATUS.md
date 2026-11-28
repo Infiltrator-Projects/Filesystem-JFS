@@ -1,13 +1,7 @@
 # JFS Common V2 migration
 
-Native JFS1 aggregate superblock validation, packed extent geometry, mirrored identity and fixed aggregate fileset inode bootstrap; no namespace mount.
+Native read-only namespace implementation for the clean Linux revision 1/2 4 KiB inline-log profile. CORE probe/mount/stat/list/read and VOLUME query are implemented directly against native extent trees, persistent block maps and inode allocation groups. The directory scope is inline ASCII leaf roots; non-ASCII names and external directory pages fail closed. Sparse and unrecorded file regions return zeros. Only stable exclusive read-only host access is admitted.
 
-CORE PROBE is implemented. No mounted operations, allocation map, native formatting, mutation, defragmentation, journal recovery, physical BOOT or kernel qualification are claimed. CI tests the actual shared object with bounded sector I/O and independent disposable formatter images; the formatter is never a runtime backend. Further namespace work and independent payload comparison are required before publishing a runtime package. The previous documentation release remains valid.
+[Independent formatter qualification](https://github.com/Infiltrator-Projects/Filesystem-JFS/actions/runs/46131371330) and [populated native structural fixture qualification](https://github.com/Infiltrator-Projects/Filesystem-JFS/actions/runs/46131701101) passed, including hosted and import-free builds, allocation corruption refusal and sanitizer checks. Independently populated external file payloads remain unqualified. Runtime publication is gated on exact-source CI and package installation/purge tests; it does not establish physical BOOT support.
 
-The [original pinned source](https://github.com/Infiltrator-Projects/Filesystems/tree/101026021d9088d80b7f0f472d9061f0e2c688a3/native/filesystems/jfs) remains central reference material; its original notices and licences remain intact.
-
-## Offline namespace development
-
-CORE mount/stat/list/read and VOLUME query are implemented for the bounded clean Linux revision 1/2 profile. The native block map, inode map and extent tree are used directly. Exact-revision CI must establish independent mount and payload correctness. External directory pages, full Unicode, journal replay and writes remain unqualified. Documentation-only publication remains unchanged.
-
-The [revision-one independent formatter test](https://github.com/Infiltrator-Projects/Filesystem-JFS/actions/runs/46131371330) passed native offline mount and empty root enumeration. The next regression exercises populated native metadata, nested names, sparse and unrecorded data and corrupt allocation refusal. It is not yet evidence of independently populated payloads.
+Remaining: external directory B+trees, full Unicode, independently populated payload verification, complete allocation ownership reconciliation, log replay, mutation, format, repair, defragmentation and physical kernel/BOOT integration. Reference source: [pinned native JFS](https://github.com/Infiltrator-Projects/Filesystems/tree/101026021d9088d80b7f0f472d9061f0e2c688a3/native/filesystems/jfs). New code GPL-3.0-or-later; inherited references retain their notices.
