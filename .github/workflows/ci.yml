@@ -28,6 +28,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends jfsutils
           truncate -s 134217728 build/foreign.img
           mkfs.jfs -q build/foreign.img
+          # Print both real superblock headers to diagnose profile rejection.
+          od -Ax -tx4 -j 32768 -N 128 build/foreign.img
+          od -Ax -tx4 -j 61440 -N 128 build/foreign.img
           sha256sum build/foreign.img > build/before
           build/test_jfs ./build/JFS.so build/foreign.img
           build/test_jfs ./build/freestanding/JFS.so build/foreign.img
