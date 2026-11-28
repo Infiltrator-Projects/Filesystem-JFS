@@ -226,7 +226,7 @@ static int mount_volume(const IfsFsHostRuntimeV2*h,void**out,IfsFsVolumeInfoV2*v
  rc=read_bytes(h,0xf000,backup,sizeof(backup));if(rc)return rc;
  if(sb(s,h->volume_bytes)||sb(backup,h->volume_bytes))return IFS_FS_UNSUPPORTED;
  uint32_t flags=le32(s+36);
- if(version!=2u||le32(s+16)!=PAGE||le32(s+40)||le32(backup+40)||le32(s+44)||
+ if((version!=1u&&version!=2u)||le32(s+16)!=PAGE||le32(s+40)||le32(backup+40)||le32(s+44)||
     !(flags&0x10000000u)||(flags&0x40000000u)||!(flags&0x800u))
   return IFS_FS_UNSUPPORTED;
  Volume*v=h->allocate(h->context,sizeof(*v));if(!v)return IFS_FS_NO_MEMORY;
